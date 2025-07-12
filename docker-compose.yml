@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: saas_postgres
+    environment:
+      POSTGRES_DB: saas_analytics
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7
+    container_name: saas_redis
+    ports:
+      - "6379:6379"
+
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    container_name: saas_redisinsight
+    ports:
+      - "8001:8001"
+
+  go-backend:
+    build: ./go-backend
+    container_name: saas_go_backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - redis
+
+  node-backend:
+    build: ./node-backend
+    container_name: saas_node_backend
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+      - redis
+
+  frontend:
+    build: ./frontend
+    container_name: saas_frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - node-backend
