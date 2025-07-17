@@ -24,7 +24,7 @@ var (
 func main() {
 	pgConnStr := os.Getenv("DATABASE_URL")
 	if pgConnStr == "" {
-		pgConnStr = "postgres://jonny@localhost:5434/saas_analytics?sslmode=disable"
+		pgConnStr = "postgres://user_name@localhost:port#/saas_analytics?sslmode=disable"
 	}
 
 	var err error
